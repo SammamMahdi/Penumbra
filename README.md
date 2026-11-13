@@ -1,92 +1,320 @@
-# Penumbra Agent: Armstrong, the assistant for Penumbra
+# Penumbra
 
 <img src="src/assets/armstrong.png" alt="Armstrong, an astronaut riding a rocket" width="96" align="right">
 
-This repository is **Penumbra**, a lunar landing-planning tool for the Moon's south pole (NASA Space Apps 2026,
-Challenge 4; original project: [SammamMahdi/Penumbra](https://github.com/SammamMahdi/Penumbra)), with an assistant
-added: **Armstrong**.
+**Know your odds of light before you land.** Penumbra is a lunar landing-planning tool for the Moon's south pole (NASA Space Apps 2026, Challenge 4).
 
-Armstrong lives behind the **Ask** button in Penumbra's header. It helps people who have never planned a lunar
-landing (students, members of the public, judges) as well as mission planners to:
+It shows how much sunlight, Earth visibility and Deep Space Network contact a landing would get. It looks not only at the point you aim for, but at everywhere the lander might actually touch down.
 
-1. **learn the app**: what each screen and control does, and where things are;
-2. **make choices**: site, landing date, landing accuracy, how careful to be, where to aim, vehicle;
-3. **understand the results**: what the numbers mean for their mission, in plain words.
+Its built-in assistant, **Armstrong**, explains every step in plain language. Penumbra suits:
 
-When Armstrong talks about *your mission*, its numbers come only from Penumbra's own calculations, never invented.
-General space questions it doesn't handle itself ("What is the James Webb Space Telescope looking for?") can go to
-an optional **space assistant**, a free hosted AI model that answers from its general knowledge. And Armstrong
-never changes anything on its own: it suggests a change, you click **Do it for me**, and you can **Undo** it.
+- mission planners and payload teams;
+- students and members of the public;
+- judges.
 
-| Document | What it covers |
+> Do not plan only for where you aim. Plan for where you may actually land.
+> The brightest landing point is not necessarily the safest point to aim for.
+
+| Planner: brightest point vs robust aim | Science & validation |
 |---|---|
-| **README.md** (this file) | Armstrong: what it can do, how it works, how to run it |
-| [PENUMBRA.md](PENUMBRA.md) | The Penumbra app itself: features, science, validation, limitations |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | How the app is built (FastAPI backend, React frontend, caching) |
-| [DATA_DOWNLOAD_MANUAL.md](DATA_DOWNLOAD_MANUAL.md) | Downloading and checking the NASA/JPL data |
+| ![planner](screenshots/e2e/A3_robust_aim_1920x1080.png) | ![science](screenshots/e2e/R_science_1440x900.png) |
+
+**Contents:**
+
+- [Get started](#get-started)
+- [Find your way around](#find-your-way-around)
+- [Plan a landing in five minutes](#plan-a-landing-in-five-minutes)
+- [The sections](#the-sections)
+- [Reading the results](#reading-the-results)
+- [Ask Armstrong](#ask-armstrong)
+- [Working offline](#working-offline)
+- [Troubleshooting](#troubleshooting)
+- [More documentation](#more-documentation)
 
 ---
 
-## How Armstrong answers
+## Get started
 
-| | **Built-in guide** (default) | **Space assistant** (free LLM chat) | **AI assistant** (optional) |
-|---|---|---|---|
-| What it is | A scripted guide written for non-specialists: no AI involved | An open-source model (default `openai/gpt-oss-120b` on Groq) answering space and app questions | Claude (Anthropic's model), with tools that run Penumbra's analyses |
-| Cost | Free | Free tier (Groq; rate-limited) or any OpenAI-compatible provider | Pay-as-you-go Claude API usage |
-| Internet | Not needed: works fully offline | Needed | Needed |
-| Answers | Buttons, plus common typed questions and requests | Typed questions the built-in guide doesn't recognise | Any question |
-| Turns on | Always | When the server has `LLM_API_KEY` set | When the server has `ANTHROPIC_API_KEY` set (the panel then switches to it) |
+### What you need
 
-Without a Claude key, the panel uses the built-in guide, and hands only the typed questions it doesn't recognise
-(for example "What is the James Webb Space Telescope looking for?") to the space assistant. Its replies appear in
-the same conversation under a small *Space assistant* label. The guide and the Claude assistant share the same
-change cards (**Do it for me** / **Apply**).
+- **Python 3.12** and **Node.js 20 or newer**.
+- **About 6 GB of free disk space**, mostly for the NASA/JPL data.
+- **An internet connection for the first setup.** After that, Penumbra can run offline.
 
----
+### First-time setup
 
-## Try it
-
-You need Python 3.12, Node.js 20+ and about 4 GB of disk space for the NASA/JPL data.
+Run these from the repository folder:
 
 ```bash
 # 1. Python environment
-python -m venv .venv && .venv/Scripts/activate          # macOS/Linux: source .venv/bin/activate
+python -m venv .venv
+.venv\Scripts\activate                 # macOS/Linux: source .venv/bin/activate
 pip install -r backend/requirements.txt
-# 2. Frontend dependencies
+
+# 2. Frontend
 npm ci
-# 3. Data (not stored in the repository; about 3.3 GB, see DATA_DOWNLOAD_MANUAL.md)
-python tasks.py data                                    # download and verify the raw NASA/JPL files into data/raw/
-python tasks.py precompute                              # terrain horizon grids for the 5 sites (a few minutes to ~30 on a laptop)
-# 4. Check and run
-python tasks.py doctor
-python tasks.py dev                                     # open http://127.0.0.1:4173 and click Ask
+
+# 3. Data (not stored in the repository; see DATA_DOWNLOAD_MANUAL.md)
+python tasks.py data                   # downloads and checks the NASA/JPL files (3.3 GB)
+python tasks.py precompute             # terrain horizon grids for the 5 sites (a few minutes, up to ~30 on a laptop)
+python tasks.py imagery                # globe imagery tiles (optional but recommended; a long download)
+
+# 4. Check and start
+python tasks.py doctor                 # every required line should say OK
+python tasks.py dev                    # then open http://127.0.0.1:4173 in your browser
 ```
 
-Armstrong's built-in guide works straight away: no key, no account, no internet needed once the data is
-downloaded. To add the free space assistant, [get a free Groq API key](#getting-a-free-groq-api-key); for the
-optional Claude assistant, see [Setup](#setup).
+If PowerShell refuses to run the activation script, run `.venv\Scripts\Activate.ps1` instead.
 
-**If `tasks.py data` reports a checksum mismatch for `earth_latest_high_prec.bpc`:** NASA's NAIF team republishes
-this Earth-orientation file regularly, so the checksum recorded in the project goes out of date. The app needs the
-file; download the current version from NAIF and run `python tasks.py doctor` again:
+If a data download is interrupted, run the same command again: it carries on where it stopped. The [data download manual](DATA_DOWNLOAD_MANUAL.md) explains every option.
+
+### Every time after that
 
 ```bash
-curl -L -o data/raw/spice/earth_latest_high_prec.bpc \
-  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_latest_high_prec.bpc
+.venv\Scripts\activate                 # macOS/Linux: source .venv/bin/activate
+python tasks.py dev                    # open http://127.0.0.1:4173; stop with Ctrl+C
 ```
-
-A newer version only refines Earth's orientation; its effect on Penumbra's results is negligible.
 
 ---
 
-## What Armstrong can do (built-in guide)
+## Find your way around
 
-### Greets you and suggests a first move
+The header is the same on every screen:
+
+| Part | What it does |
+|---|---|
+| **01 Explore … 07 System** | The seven sections of the app (on narrow screens, a menu button lists them). |
+| **Site** and **Landing date** | Shown on Mission, Briefing and Compare. **‹** and **›** move the landing date by one day. |
+| **Computing** | Appears while the server is working on your request. |
+| **Data** | Opens *Data and provenance*: every dataset, file, version and checksum behind the numbers. |
+| **Export** | Opens the decision summary for your current plan (**Copy JSON** or **Download JSON**). |
+| **Ask** | Opens Armstrong, the assistant (see [Ask Armstrong](#ask-armstrong)). |
+
+The address bar keeps your place, so you can bookmark or share a view:
+
+| Link | Opens |
+|---|---|
+| `http://127.0.0.1:4173/?mode=planner&site=cr1` | Mission planner at Connecting Ridge |
+| `?mode=simple&site=shk` | Briefing for Shackleton rim |
+| `?mode=planner&site=mal&view=sky` | Mission planner at Malapert, on the Skyline view |
+| `?mode=planner&site=cr1&landing=4320` | Connecting Ridge with a landing on 30 Jun 2027 |
+| `?mode=compare`, `?mode=science`, `?mode=report`, `?mode=about` | Compare, Science, Research, System |
+
+**Notes on the links:**
+
+- `landing` is the hour of 2027 when the lander touches down (0 = 1 Jan 00:00 UTC).
+- Site codes:
+
+  | Code | Site |
+  |---|---|
+  | `cr1` | Connecting Ridge |
+  | `shk` | Shackleton rim |
+  | `mal` | Malapert |
+  | `mou` | Mons Mouton / Leibnitz β |
+  | `nob` | Nobile rim 1 |
+
+---
+
+## Plan a landing in five minutes
+
+1. Open **02 Mission**. The **Mission sequence** bar lists seven steps, and **Next:** tells you what to do next.
+2. **Site:** pick a site in the header.
+3. **Date:** click a day on the calendar strip at the bottom. Brighter days mean more sunlight.
+4. **Uncertainty:** in *Landing uncertainty*, set how far from the target the lander might land (for example, a 100 m radius). Then choose how careful to be (**P10 · Conservative** is a good default).
+5. **Robust aim:** click **Find robust aim**. The map shows the **brightest point** and the **robust aim**, which is the target that stays in sunlight even when the landing is off-target.
+6. **Skyline:** open the **Skyline** tab to see the real terrain horizon, with the Sun and Earth moving over it.
+7. **Compare**, then **Export**: rank this site against the others, then save the decision summary.
+
+If you'd rather be guided, click **Ask** and then **Walk me through it**.
+
+---
+
+## The sections
+
+### 01 Explore: the 3-D Moon
+
+When the app starts, an introduction appears. It fades away as soon as you start exploring; you can also close it with **✕**.
+
+**Moving around the globe:**
+
+- **Drag** to spin the Moon. Release while moving to let it roll.
+- **Scroll** to zoom.
+- **Right-drag** to tilt.
+- **Click** anywhere to inspect that place.
+
+**Quick views:** **Nearside (from Earth)**, **Earth in view**, **North Pole** and **South Pole**.
+
+**Lighting:**
+
+- **Always lit** shows every side of the Moon in soft light, so you can explore anywhere.
+- **Real sunlight** lights the Moon from the Sun's true direction at the selected time, with day, night and long polar shadows.
+
+**Earth size:** **Earth ×4** enlarges Earth so it is easy to see; **True scale** shows its real apparent size. Either way, it is drawn in its true direction and phase.
+
+**Time bar:** **▶** plays 2027 forward at **1 h/s**, **6 h/s** or **1 d/s**. You can also drag the slider to any moment.
+
+**Clicking a place** opens an information card. It shows:
+
+- the place's height and slope;
+- how often the Sun and Earth are above its horizon in 2027;
+- the brightest spot nearby, and the nearest Penumbra site;
+- *Where should you aim?*: the brightest point next to the safest aim. Click anywhere on the coloured area to move your aim.
+
+**Plan a landing** opens the quick landing planner:
+
+1. **Where?** Choose one of the five sites, and the camera flies down to its real terrain.
+2. **When?** Pick a landing day on the year strip (brighter days mean more sunlight), or step with **‹ ›**.
+3. Read the results: **Sunlight**, **Longest night**, **Earth in view** and **Battery lasts**.
+
+From there, **Advanced planner** opens the full Mission page, and **Export** saves the plan.
+
+### 02 Mission: the full planner
+
+**Mission sequence.** Seven steps run across the top: **Site**, **Date**, **Uncertainty**, **Robust aim**, **Skyline**, **Compare** and **Export**.
+
+- Finished steps are ticked, and the next one is highlighted.
+- Click any step to jump to it.
+
+**Landing map** tab:
+
+- **Map mode** switches between a **2-D plan** and **3-D terrain**.
+- **Click inside the dashed box** to set the commanded aim: the point you tell the lander to aim for.
+- The **Layers** panel turns these on and off:
+  - **Heatmap:** sunlight as a % of 2027 (**Nominal**), or the robust score (**Robust**);
+  - **Landing uncertainty zone**;
+  - **Possible touchdowns:** the simulated landings;
+  - **Shaded relief:** lit by the Sun;
+  - **Slope > 5°**;
+  - **Known points:** published reference points from Gläser et al. 2018.
+- **3-D terrain:**
+  - **Landing zone** shows the site close up; **South polar region** shows the wider area around it;
+  - **Always lit** or **Real sunlight** with real shadows;
+  - adjustable vertical exaggeration.
+
+**Skyline** tab:
+
+- **Sky view:** a **2-D panorama** of the horizon, or a **3-D sky dome**.
+- Vertical exaggeration **×1**, **×5** or **×10**.
+- Drag to look around, and scroll to zoom.
+- The Sun and Earth follow the calendar's time cursor.
+
+**Landing uncertainty** panel:
+
+- **Uncertainty model:**
+  - **Circular** (set a **Radius**);
+  - **Elliptical Gaussian** (set **σ east**, **σ north**, **Rotation** and the **Confidence ellipse**).
+- **Robustness level:**
+  - **P50 · Typical**;
+  - **P20 · Cautious**;
+  - **P10 · Conservative**;
+  - **P05 · Highly conservative**.
+
+  The more conservative the level, the more of the bad landings the plan allows for.
+- **Find robust aim** searches every possible aim point and picks the one with the best result at your robustness level. The **Touchdown outcomes** chart shows the spread of results across the simulated landings.
+
+**Mission calendar** (bottom of the screen):
+
+- Rows for the Sun, Earth, DSN and power over the mission.
+- Pick the landing day on the strip, or step with **‹ ›**.
+- **Mission horizon** sets the length shown: **14 d**, **30 d** or **90 d**.
+- Play the mission at **1 h**, **6 h** or **1 d** per second.
+- The cursor marks the moment shown on the map and skyline.
+
+**Mission card:**
+
+- **Results:** the **Nominal** and **Conservative** outcomes, **Sunlight**, **Earth visibility**, **DSN geometric opportunity**, **Major darkness period** and the **Energy endurance estimate**.
+- **Vehicle & settings:**
+  - **Vehicle scenario:** a VIPER preset built from NASA figures, plus labelled assumption presets.
+  - **Power scenario:** edit battery capacity, baseline load, hibernation load, usable reserve and panel heading. **Restore preset values** undoes your edits.
+  - **Earth visibility margin**.
+  - **DSN elevation mask:** **6° downlink** or **10.1° uplink**.
+  - **Mast height:** the stored grids are for a 2 m mast.
+  - **Exact coordinates** in the MOON_ME frame.
+
+### 03 Briefing: the plain-language summary
+
+This page has one card for the chosen site and date: *A rover landing here on this date has…*
+
+- a rating for its initial sunlight and for its landing-position risk;
+- the sunlight it gets in 9 of 10 likely touchdowns;
+- how often Earth is visible;
+- the longest darkness in the first days.
+
+Choose the landing accuracy with **Precise ±50 m**, **Typical ±100 m** or **Loose ±400 m**. A compact map shows the landing zone.
+
+### 04 Compare: rank the sites
+
+*Which site keeps the lander in sunlight, wherever it actually lands?*
+
+- **Choosing sites:** click the site chips to choose two or more sites. **All sites** compares all five; **Back to three** returns to three.
+- **Which date it uses:** your current landing date and mission length (the **Mission horizon** setting on the Mission calendar).
+- **How sites are ranked:** Penumbra finds each site's robust aim, simulates the touchdowns, and ranks the sites by sunlight at your robustness level.
+- **Columns:**
+  - **Nominal (brightest point)**;
+  - **P50**, **P20** and **P10 at robust aim**;
+  - **Earth visibility**;
+  - **DSN geometric opportunity**;
+  - **Longest darkness** in the mission window.
+
+### 05 Science: validation
+
+This page shows how Penumbra's results compare with independent references, using tolerances fixed in advance:
+
+- **V1:** NASA's PGDA 69 sunlight maps;
+- **V2:** the published values of Gläser et al. (2018);
+- **V4:** JPL Horizons.
+
+It also shows the latest automated test report.
+
+### 06 Research: the research report
+
+The full report: the problem, the gaps, the method, the findings and the references.
+
+- Figures are computed live from the same engine.
+- A contents list beside the text follows your scrolling.
+
+### 07 System: how Penumbra works
+
+This page covers the data pipeline, the datasets, the validation and the limits, with links to each section of the app.
+
+---
+
+## Reading the results
+
+| Term | Meaning |
+|---|---|
+| **Sunlight** | Share of the time the Sun is above the local terrain horizon. A partly hidden Sun counts in part. |
+| **Nominal outcome** | Sunlight if the lander touches down exactly on the aim point. |
+| **P50 / P20 / P10 / P05** | Sunlight that 50%, 80%, 90% or 95% of the simulated touchdowns reach or beat. For example, **P10** is *planning for a bad day*: 9 of 10 likely landings do at least this well. |
+| **Conservative outcome** | The result at your chosen robustness level (P10 by default). |
+| **Brightest point** | The sunniest spot if you could land exactly on it. |
+| **Robust aim** | The aim point with the best result at your robustness level, allowing for the landing error. It is often not the brightest point. |
+| **Landing uncertainty zone** | Where the lander may actually come down: 2,000 simulated touchdowns drawn from your uncertainty model. |
+| **Earth visibility** | Share of the time Earth is above the horizon by your safety margin, so direct-to-Earth radio is possible. |
+| **DSN geometric opportunity** | Times when a Deep Space Network station (Goldstone, Madrid or Canberra) sees the Moon above its elevation mask *and* Earth is visible from the site. This is geometry only, not scheduled antenna time. |
+| **Major darkness period** | The longest stretch without sunlight in the mission window. |
+| **Energy endurance estimate** | How long the vehicle's battery lasts under the chosen power scenario. |
+
+---
+
+## Ask Armstrong
+
+Click **Ask** in the header to open **Armstrong**. It answers in up to three ways:
+
+- **Built-in guide.** Always available, free and offline, with no AI involved. It covers walkthroughs, explanations using your numbers, *What's this?*, help choosing a site and date, and changes made on request.
+- **Space assistant** (optional). A free hosted AI model answers general space questions the guide doesn't recognise. Its replies are labelled *Space assistant*, and they come from the model's general knowledge, not from Penumbra's calculations.
+- **AI assistant** (optional). Claude answers any question by running Penumbra's own analyses as tools.
+
+Whatever answers, **mission numbers come only from Penumbra's calculations**. Armstrong never changes anything on its own: it suggests a change, you click **Do it for me**, and **↶ Undo** puts everything back.
+
+### What Armstrong can do (built-in guide)
+
+#### Greets you and suggests a first move
 On a first visit, a small bubble next to **Ask** offers a short tour ("Show me around" / "Maybe later"). It appears
 once per browser and never blocks the app. Opening the panel shows a greeting that says where you are (section,
 site, landing date) and highlights the suggested next move.
 
-### Walks you through planning a landing
+#### Walks you through planning a landing
 **Walk me through it** goes through the seven steps of the mission sequence, one at a time:
 
 1. Choose a site
@@ -101,7 +329,7 @@ Each step shows a progress bar, explains *why* the step matters in plain words, 
 and offers **Do it for me**, **Show me where**, **Skip this step** and **Stop the walkthrough**. If you do a step
 yourself in the app, Armstrong notices, ticks it off and moves on.
 
-### Explains every choice in plain words, with your numbers
+#### Explains every choice in plain words, with your numbers
 - **Tips** (on by default, switch with *Tips on/off*): whenever you change the site, landing date, landing accuracy,
   caution level, aim, vehicle or mission length, Armstrong explains what the new choice means for your mission and
   suggests the next step. For example, after a date change it says how many of your first days get sunshine, when
@@ -111,20 +339,20 @@ yourself in the app, Armstrong notices, ticks it off and moves on.
 - Analogies instead of jargon: the landing zone is like throwing a dart at a target, the brightest point is "the
   sunniest seat in a stadium", P10 means "planning for a bad day".
 
-### Explains anything you point at ("What's this?")
+#### Explains anything you point at ("What's this?")
 Tap **What's this?**, then tap anything on screen: a number in the mission card, the calendar rows, the map, its
 colour key, the skyline, the landing-results chart, a header button. Armstrong explains that part, using your
 numbers. While the mode is on, hovering outlines what would be explained, and the tap does not press the control
 underneath. *Esc* cancels.
 
-### Lets you go deeper, at your own pace
+#### Lets you go deeper, at your own pace
 - Technical words in answers (P10, robust aim, DSN, landing zone, longest darkness…) are underlined: tap one for a
   plain explanation.
 - Explanations are short; **Tell me more** gives the detail behind them (where the terrain data comes from, how
   the Sun's position is computed, what a percentile is…).
 - **Read aloud** reads any answer using the browser's built-in voice (free, offline on most systems).
 
-### Helps you decide
+#### Helps you decide
 - **Help me choose a site** asks three quick questions (what matters most: sunshine, contact with Earth, getting
   through long nights, or a balance; how precisely your lander can touch down; how careful to be), compares all
   five sites with those settings and recommends one, with the reasons, the runner-up and an honest trade-off.
@@ -133,7 +361,7 @@ underneath. *Esc* cancels.
 - **Quick comparisons**: other landing accuracies (±50 / ±100 / ±400 m), the four caution levels side by side, all
   five sites for your date, the best landing dates.
 
-### Understands typed requests and follow-ups
+#### Understands typed requests and follow-ups
 Without AI, Armstrong recognises the things people name (site, date, distance, caution level, mission length,
 section, vehicle) and what they want:
 
@@ -148,165 +376,78 @@ section, vehicle) and what they want:
 Site names are recognised even with small typos ("shakleton"). Anything it can't understand gets a short apology
 and a list of things it can do.
 
-### Changes things for you, safely
+#### Changes things for you, safely
 Suggested changes appear as cards that list exactly what will change ("Landing date: 29 Jun 2027 → 15 Jul 2027").
 Nothing happens until you click **Do it for me**; every applied card offers **↶ Undo**, which puts the app back
 exactly as it was.
 
-### Keeps you oriented
+#### Keeps you oriented
 The **Your plan** strip at the top of the panel shows your site, date, landing accuracy and caution level, seven
 dots for the steps (tap one to jump to it), how many are done, and a **Continue** button.
 
+### Turn on the optional AI chat
+
+The space assistant needs a free Groq API key; no credit card is required.
+
+1. Create the key at [console.groq.com/keys](https://console.groq.com/keys). It starts with `gsk_`.
+2. Put it in a file named `.env` in the project folder, with these three lines. Git ignores `.env`, so the key is never committed.
+3. Restart `python tasks.py dev`.
+
+```
+LLM_BASE_URL=https://api.groq.com/openai/v1
+LLM_API_KEY=gsk_...
+LLM_MODEL=openai/gpt-oss-120b
+```
+
+For the Claude-based AI assistant, add `ANTHROPIC_API_KEY=sk-ant-...` to the same file. Usage is charged per question.
+
+Step-by-step key instructions, other providers (Gemini, OpenRouter, a local Ollama), the terminal chatbot and how Armstrong works are in [docs/ASSISTANT.md](docs/ASSISTANT.md).
+
 ---
 
-## How it works
+## Working offline
 
-### Where the numbers come from
-Penumbra does all its science on the server (terrain horizons, Sun/Earth geometry, simulated landings). Armstrong
-follows the same rule and never computes science in the browser. Its numbers come from:
+Once the data is downloaded (and ideally the imagery built), Penumbra needs no internet:
 
-- **the mission card's results**, which the panel reads from the same requests the views make (cache hits, no extra
-  work); or
-- **the same API routes the app uses**: `POST /api/landing-risk`, `POST /api/visibility`, `POST /api/compare` and
-  `POST /api/endurance` (for example, "what if I land on 15 July?" calls `/api/visibility` for both dates).
+```bash
+PENUMBRA_OFFLINE=1 python tasks.py dev          # Windows PowerShell: $env:PENUMBRA_OFFLINE=1; python tasks.py dev
+```
 
-Answers state the settings they used (site, date, landing zone, caution level) so it's clear what was computed.
+**What works offline:**
 
-The exception is the **space assistant**: it doesn't see your mission's numbers and answers general space questions
-from the AI model's own knowledge, so its replies carry a *Space assistant* label (see
-[Space assistant](#space-assistant-free-llm-chat)).
+- **Globe imagery:** only tiles that are already on disk. Visit areas while online if you want deep zoom offline.
+- **Armstrong:** the built-in guide keeps working. The optional AI chat is switched off.
 
-### Built-in guide: the pieces
-All in `src/features/assistant/guide/`, plain TypeScript, no AI and no network beyond Penumbra's own server.
+---
 
-| File | Role |
+## Troubleshooting
+
+| Problem | What to do |
 |---|---|
-| `engine.ts` | Turns a request into an answer: greeting, walkthrough steps, explanations, decision helpers, what-ifs, typed commands. Each answer can carry change cards, follow-up buttons, a "Show me where" target and walkthrough progress. |
-| `plain.ts` | Plain-language explanations of each choice (site, date, accuracy, caution level, aim, vehicle, mission length), the **In short** verdict and **Tell me more** texts. |
-| `nlu.ts` | Understands typed text: finds sites (typo-tolerant), dates ("15 July", "July 15th", "2027-07-15"), distances, caution levels, mission length, sections, vehicles; recognises yes/no/next/more/show me/thanks. |
-| `watch.ts` | Notices what changed in the app (site, date, accuracy, robust-aim result, skyline…) and builds the plain-language tip plus the next step. |
-| `whatsthis.ts` | "What's this?": maps what you tap to an explanation. |
-| `spotlight.ts` | "Show me where": switches to the right section, opens collapsed panels, scrolls the control into view and outlines it. |
-| `content.ts` | Glossary, how-to answers, screen descriptions, limitations, validation summary, tappable words. |
-| `util.ts` | Shared helpers, site names, and the guide's name (`GUIDE_NAME = "Armstrong"`). |
-
-The panel itself is `src/features/assistant/AssistantPanel.tsx`. Changes are applied by `applyProposal.ts`
-through the same functions the app's own controls use, after saving an undo snapshot. The welcome bubble is
-`GuideWelcome.tsx`; the avatar is `GuideAvatar.tsx` (`src/assets/armstrong.png`).
-
-### AI assistant (optional): the pieces
-When `ANTHROPIC_API_KEY` is set, the panel sends each question to `POST /api/assistant` (server-sent events):
-
-- **What it sends:** the conversation, a snapshot of the screen (`<app_state>`: section, site, settings and the
-  numbers already computed) and a machine-readable copy of the settings.
-- **What Claude knows:** a system prompt (`backend/app/assistant/guide.py`) describing every screen and control,
-  the science concepts, the limitations and the rules: never state a mission number that didn't come from the
-  screen snapshot or a tool, never claim a change was made.
-- **Tools** (`backend/app/assistant/tools.py`), run by the Anthropic SDK's tool runner (up to 8 model turns per
-  question). Each calls the same analysis code as the API, defaults to your current settings, and accepts
-  overrides for "what if" questions:
-
-  | Tool | Purpose |
-  |---|---|
-  | `get_mission_outlook` | Sunlight, Earth and DSN contact, longest darkness, battery and daily sunlight after landing |
-  | `get_landing_risk` | Sunlight for a perfect landing and across 2,000 simulated landings (P50–P05) |
-  | `find_robust_aim` | Brightest point vs the safer robust aim |
-  | `compare_sites` | Ranks the sites for one mission (same method as the Compare page) |
-  | `find_best_landing_dates` | Best landing days of 2027, with battery endurance |
-  | `get_site_info` | Facts about the sites |
-  | `propose_app_changes` | Prepares a change card; nothing changes until the person clicks Apply |
-
-- **Model and settings:** `claude-opus-5-5` at `medium` effort by default, streaming, prompt caching on the system
-  prompt, and the API's server-side fallback if a request is declined.
-- The tools' numbers were checked against the API routes on the real NASA/JPL data: they match exactly.
+| *The Penumbra backend is not reachable* | Start the server with `python tasks.py dev`, and keep that window open. |
+| The app shows *Data unavailable*, or `doctor` reports missing files | Run `python tasks.py data --check` to see what is missing or damaged, then `python tasks.py data`. |
+| Port 4173 is already in use | Another Penumbra server is probably running. Close it, or use the one that is already open. |
+| A site is slow the first time you open it | Its horizon grid is being computed. Run `python tasks.py precompute` once to prepare all five sites in advance. |
+| The globe has no detailed imagery | Run `python tasks.py imagery`. In offline mode, only tiles already on disk are shown. |
+| The space assistant says the key is invalid, or asks you to wait | Check `LLM_API_KEY` in `.env`. Groq's free tier is rate-limited, so wait a minute and ask again. |
+| A data download fails or reports a checksum problem | See *Troubleshooting* in the [data download manual](DATA_DOWNLOAD_MANUAL.md). |
 
 ---
 
-## Setup
+## More documentation
 
-The built-in guide needs nothing: run Penumbra as usual (`python tasks.py dev`) and click **Ask**.
+| Document | What it covers |
+|---|---|
+| [PENUMBRA.md](PENUMBRA.md) | Features, the NASA/JPL data, validation results, architecture overview, limitations and citations |
+| [DATA_DOWNLOAD_MANUAL.md](DATA_DOWNLOAD_MANUAL.md) | Downloading and checking the data, building the imagery, offline use |
+| [docs/ASSISTANT.md](docs/ASSISTANT.md) | Armstrong: how it works, setting up the AI chat, tests and limits |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | How the app is built (FastAPI backend, React frontend, caching) |
+| [docs/SCIENTIFIC_VALIDATION.md](docs/SCIENTIFIC_VALIDATION.md) | Method, equations and validation cases |
+| [docs/DATA_PROVENANCE.md](docs/DATA_PROVENANCE.md) | Every data file with its source, version, frame and checksum |
 
-To turn on the AI assistant, put a Claude API key in `.env` (git-ignored) and restart the server:
-
-```
-ANTHROPIC_API_KEY=sk-ant-...
-```
-
-| Variable | Default | Meaning |
-|---|---|---|
-| `ANTHROPIC_API_KEY` | (none) | Turns on the AI assistant |
-| `PENUMBRA_ASSISTANT_MODEL` | `claude-opus-5-5` | Claude model |
-| `PENUMBRA_ASSISTANT_EFFORT` | `medium` | `low`, `medium` or `high` |
-| `PENUMBRA_ASSISTANT` | `1` | `0` switches the AI assistant off |
-| `PENUMBRA_OFFLINE` | `0` | `1` also switches it off (the built-in guide keeps working) |
-
-`GET /api/assistant/status` reports whether the AI assistant is available and why not, and whether the space
-assistant is set up (never any key).
-
-### Space assistant (free LLM chat)
-
-The space assistant calls any provider with an OpenAI-compatible API from the server (`POST /api/chat`, code in
-`backend/app/assistant/llm_chat.py`), so the key never reaches the browser. By default it uses the **Groq API**,
-which has a free tier. (Groq, with a *q*, at groq.com, runs open models quickly. It is not xAI's *Grok* chatbot.)
-
-#### Getting a free Groq API key
-
-1. Go to [console.groq.com](https://console.groq.com) and sign in (Google, GitHub or email). No credit card is needed.
-2. Open **API Keys** ([console.groq.com/keys](https://console.groq.com/keys)) and click **Create API Key**. Give it a
-   name such as `Penumbra`.
-3. Copy the key straight away; Groq shows it only once. It starts with `gsk_`.
-4. Put it in `.env` at the project root (the file is git-ignored, so the key is never committed), right after
-   `LLM_API_KEY=`, with no spaces or quotes:
-
-   ```
-   LLM_BASE_URL=https://api.groq.com/openai/v1
-   LLM_API_KEY=gsk_...
-   LLM_MODEL=openai/gpt-oss-120b
-   ```
-5. Restart the server (`python tasks.py dev`). To check the key and model first, run the terminal chatbot below.
-
-Keep the key private: don't share it or put it in code. If it leaks, delete it on the same API Keys page and create a
-new one. Groq's free tier is rate-limited; when the limit is reached, the chat asks you to wait a minute.
-
-Switching provider is a matter of changing those lines: `.env.example` lists Gemini, OpenRouter (models ending in
-`:free`) and Ollama (local) as alternatives. Each question sends a system prompt (who the assistant is, Penumbra's
-features, "say so if unsure", "steer off-topic questions back to space") plus the last 10 messages, with replies
-capped at 500 tokens and `temperature` 0.7. Errors are shown in the chat as plain messages: invalid key (401), rate
-limit, so wait a minute (429, not retried automatically), model not found (404), or a generic error.
-
-### Terminal chatbot
-
-`scripts/space_chat_cli.py` is the same chat in the terminal, a quick way to check a key and model:
+**Running the tests:**
 
 ```bash
-pip install openai python-dotenv     # already in the project environment
-python scripts/space_chat_cli.py     # reads LLM_BASE_URL, LLM_API_KEY, LLM_MODEL from .env; type exit to leave
+python tasks.py test           # scientific, API and frontend tests
+python tasks.py test --e2e     # also the browser journeys (the server must be running)
 ```
-
----
-
-## Tests
-
-```bash
-npx vitest run tests/frontend          # includes the guide, panel, change cards, undo and explanations
-python -m pytest tests/api/test_assistant.py tests/api/test_assistant_tools.py   # AI endpoint and tools
-python -m pytest tests/api/test_chat.py                                          # space assistant chat
-```
-
-The frontend tests cover typed-text understanding, the plain-language explanations, the walkthrough and its
-auto-advance, the decision helpers, what-ifs, commands, tips, "What's this?", tappable words, Undo and a full render
-of the panel. The backend tests cover prompt assembly, availability, the event stream and every tool, with the
-science calls replaced so they run without data or an API key.
-
----
-
-## Limits
-
-- The built-in guide understands common phrasings, not everything; when it doesn't, it says so and offers options.
-- Read aloud depends on the voices installed in the browser or operating system.
-- Armstrong explains Penumbra's results, so it inherits their limits: terrain resolution, a landing-error model
-  chosen by the user, geometric (not scheduled) DSN contact and a simplified battery estimate. See *Limitations* in
-  [PENUMBRA.md](PENUMBRA.md).
-- The AI assistant needs internet access and costs money per question; the built-in guide is free and offline.
-- The space assistant answers from the model's general knowledge, not from Penumbra's calculations, and models can
-  get facts wrong. Free tiers are rate-limited: if many questions arrive quickly, it asks you to wait a minute.

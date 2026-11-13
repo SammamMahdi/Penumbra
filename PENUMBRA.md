@@ -61,8 +61,8 @@ The **Ask** button in the header opens **Armstrong**, Penumbra's assistant. It a
 - **AI assistant** (optional, paid): Claude, with tools that run Penumbra's analyses, when `ANTHROPIC_API_KEY` is
   set.
 
-Keys stay on the server (`.env`, git-ignored). How it all works, setup, tests and limits:
-[README.md](README.md).
+Keys stay on the server (`.env`, git-ignored). How to use it: [README.md](README.md#ask-armstrong); how it works,
+setup, tests and limits: [docs/ASSISTANT.md](docs/ASSISTANT.md).
 
 ## Tests
 
