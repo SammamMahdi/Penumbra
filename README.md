@@ -2,7 +2,7 @@
 
 <img src="src/assets/armstrong.png" alt="Armstrong, an astronaut riding a rocket" width="96" align="right">
 
-**Know your odds of light before you land.** Penumbra is a lunar landing-planning tool for the Moon's south pole (NASA Space Apps 2026, Challenge 4).
+**Know your odds of light before you land.** Penumbra is a lunar landing-planning tool for the Moon's south pole, built by **Team Tewre Zahbeau** for NASA Space Apps 2026 (Challenge 4).
 
 It shows how much sunlight, Earth visibility and Deep Space Network contact a landing would get. It looks not only at the point you aim for, but at everywhere the lander might actually touch down.
 
