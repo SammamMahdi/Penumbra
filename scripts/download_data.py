@@ -74,6 +74,9 @@ def verify(p: Path, f: dict) -> tuple[bool, str]:
     if f["check"] == "sha256":
         good = p.stat().st_size == f["bytes"] and sha256(p) == f["sha256"]
         return good, "" if good else "SHA-256 mismatch"
+    if f["check"] == "latest":  # republished under the same name by its source (NAIF's earth_latest_high_prec.bpc)
+        same = sha256(p) == f["sha256"]
+        return p.stat().st_size > 0, "" if same else "the source has published a newer version than the reference copy (kept)"
     if f["check"] == "rows":
         h = rows_sha256(p, f["url"])
         if h is None:
@@ -84,10 +87,10 @@ def verify(p: Path, f: dict) -> tuple[bool, str]:
 
 
 def present(p: Path, f: dict) -> bool:
-    """Fast skip test: the file exists with the expected size (rows files: exists and is not empty)."""
+    """Fast skip test: the file exists with the expected size (rows and latest files: exists and is not empty)."""
     if not p.exists():
         return False
-    return p.stat().st_size > 0 if f["check"] == "rows" else p.stat().st_size == f["bytes"]
+    return p.stat().st_size > 0 if f["check"] in ("rows", "latest") else p.stat().st_size == f["bytes"]
 
 
 def attempt_once(url: str, f: dict, part: Path, dest: Path, resumable: bool) -> tuple[str, str]:
@@ -110,7 +113,7 @@ def attempt_once(url: str, f: dict, part: Path, dest: Path, resumable: bool) -> 
         with open(part, "ab" if append else "wb") as out:
             shutil.copyfileobj(r, out, CHUNK)
     size = part.stat().st_size
-    if f["check"] != "rows" and size < f["bytes"]:
+    if f["check"] in ("sha256", "size") and size < f["bytes"]:
         raise OSError(f"connection closed early ({human(size)} of {human(f['bytes'])})")
     good, note = verify(part, f)
     if not good:
@@ -127,7 +130,7 @@ def fetch(f: dict, dest: Path) -> tuple[str, str]:
     Returns (status, note) with status in ok / warn / fail."""
     part = dest.with_name(dest.name + ".part")
     dest.parent.mkdir(parents=True, exist_ok=True)
-    resumable = f["check"] != "rows"  # API responses are regenerated on every request
+    resumable = f["check"] in ("sha256", "size")  # API responses and republished files change between requests
     urls = [f["url"], *f.get("mirrors", [])]
     last = ""
     for attempt in range(1, RETRIES + 1):

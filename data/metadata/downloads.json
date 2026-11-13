@@ -31,7 +31,7 @@
      "path": "data/raw/spice/earth_latest_high_prec.bpc",
      "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/earth_latest_high_prec.bpc",
      "bytes": 5138432,
-     "check": "sha256",
+     "check": "latest",
      "sha256": "9fee39503b9fdb3eed05a7092f84ff5a53379bab09214fd7a562a8124239a017"
     },
     {

@@ -11,6 +11,8 @@ Verification modes written for each file:
   rows    hash of the data rows only (JPL Horizons between $$SOE and $$EOE; VizieR lines not starting with '#'),
           because API responses carry the request time and current EOP file name in their headers
   size    byte count only (imagery build inputs with no local reference copy)
+  latest  files their source republishes under the same name (NAIF's *_latest_* kernels): SHA-256 of the reference
+          copy is recorded, and a newer version is kept with a note
 """
 from __future__ import annotations
 
@@ -103,6 +105,8 @@ def main() -> None:
         for f in g["files"]:
             rel, local = f["path"], ROOT / f["path"]
             entry = {"path": rel, "url": f.get("url") or "", "bytes": f["bytes"], "check": "sha256", "sha256": f["sha256"]}
+            if "_latest_" in rel:
+                entry["check"] = "latest"
             if grp == "horizons":
                 text = local.read_text(encoding="utf-8")
                 entry.update(url=horizons_url(text), check="rows", rows_sha256=rows_sha256(text, "horizons"))

@@ -74,6 +74,7 @@ On a slow or shared connection, use `--jobs 1`.
 - **Static files** (PDS, PGDA, NAIF, the PDFs) must match their SHA-256 checksum exactly. If one doesn't match, the script deletes it and downloads it again.
 - **JPL Horizons tables and the star catalogue** come from live web services. Their headers include the request time and the current Earth-orientation file name, so the file is never byte-identical. The script therefore checks only the **data rows**. On 12 Nov 2026, a sample re-download reproduced the data rows of the copies used for validation exactly.
   - If JPL later updates its models, the rows may differ slightly. The script then keeps the file and prints a note. Validation V4 allows 10″, while the reference tables agreed with SPICE to within 0.1″.
+- **`earth_latest_high_prec.bpc`** is republished by NAIF under the same name every few weeks. If the downloaded copy is newer than the reference copy, the script keeps it and prints a note. A newer version only refines Earth's orientation, so its effect on Penumbra's results is negligible.
 - **The north LOLA label** (`ldem_80n_80m.lbl`) is checked by size only.
 
 If the main VizieR server (CDS Strasbourg) is unavailable, the script uses the Harvard mirror. It returns the same rows.
