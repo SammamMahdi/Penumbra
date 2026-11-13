@@ -451,3 +451,14 @@ PENUMBRA_OFFLINE=1 python tasks.py dev          # Windows PowerShell: $env:PENUM
 python tasks.py test           # scientific, API and frontend tests
 python tasks.py test --e2e     # also the browser journeys (the server must be running)
 ```
+
+---
+
+## License
+
+Penumbra's code is released under the [MIT License](LICENSE).
+
+Third-party material keeps its own terms:
+
+- **Fonts** in `src/assets/fonts/` (Michroma, Space Grotesk, Space Mono) are under the [SIL Open Font License 1.1](https://openfontlicense.org/).
+- **NASA, JPL and partner data** downloaded by `python tasks.py data` and `python tasks.py imagery` is not part of this repository. Each source's terms are listed in [docs/DATA_PROVENANCE.md](docs/DATA_PROVENANCE.md).
