@@ -18,7 +18,7 @@ Run these from the repository folder, using the Python environment you set up in
 
 ```bash
 python tasks.py data          # 1. download and verify the raw data (3.3 GB, 165 files)
-python tasks.py precompute    # 2. cached horizon grids for the 5 sites (about 5 minutes on 16 threads)
+python tasks.py precompute    # 2. cached horizon grids for the 5 sites (about 5 minutes on a 16-thread CPU, up to ~30 on a laptop)
 python tasks.py imagery       # 3. build the globe imagery tiles (long; needs internet)
 python tasks.py doctor        # 4. check that everything is in place
 python tasks.py dev           # 5. run the app at http://127.0.0.1:4173

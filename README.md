@@ -56,7 +56,7 @@ npm ci
 
 # 3. Data (not stored in the repository; see DATA_DOWNLOAD_MANUAL.md)
 python tasks.py data                   # downloads and checks the NASA/JPL files (3.3 GB)
-python tasks.py precompute             # terrain horizon grids for the 5 sites (a few minutes, up to ~30 on a laptop)
+python tasks.py precompute             # terrain horizon grids for the 5 sites (about 5 minutes on a 16-thread CPU, up to ~30 on a laptop)
 python tasks.py imagery                # globe imagery tiles (optional but recommended; a long download)
 
 # 4. Check and start

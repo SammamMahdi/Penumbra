@@ -29,24 +29,12 @@ Penumbra traces the real terrain skyline from NASA 5 m and LOLA elevation data, 
 - **Skyline dome and panorama, site comparison (2–5 sites), Simple and Planner modes.**
 - **Validation and provenance in the app, JSON export, URL permalinks, and offline operation.**
 
-## Quick start (Windows, macOS, Linux)
+## Quick start
 
-```bash
-# 1. Python 3.12 environment
-python -m venv .venv && .venv/Scripts/activate        # macOS/Linux: source .venv/bin/activate
-pip install -r backend/requirements.txt               # offline: pip install --no-index --find-links ../penumbra_prep/env/wheelhouse -r backend/requirements.txt
-# 2. Frontend dependencies
-npm ci                                                 # offline: npm ci --prefer-offline
-# 3. Data (not in the repository; see DATA_DOWNLOAD_MANUAL.md)
-python tasks.py data                                   # download + verify the raw NASA/JPL files (3.3 GB) into data/raw/
-python tasks.py precompute                             # horizon grids for the 5 sites, about 5 minutes on 16 threads
-python tasks.py imagery                                # globe imagery tiles (downloads from USGS and NASA Moon Trek)
-# 4. Check and run
-python tasks.py doctor
-python tasks.py dev                                    # http://127.0.0.1:4173
-```
-
-Permalinks open straight on a view, for example `http://127.0.0.1:4173/?mode=planner&site=cr1`, `?mode=simple&site=shk` or `?mode=planner&view=compare`.
+Setup, everyday use and a guide to every screen are in the [README](README.md#get-started). In short:
+`python tasks.py data`, `python tasks.py precompute` and `python tasks.py imagery` prepare the data, and
+`python tasks.py dev` starts the app at http://127.0.0.1:4173. The data steps are explained in
+[DATA_DOWNLOAD_MANUAL.md](DATA_DOWNLOAD_MANUAL.md).
 
 ## Assistant
 
