@@ -1,7 +1,7 @@
 # Repository map
 
 ```text
-penumbra_mockup/
+Penumbra/
 ├── backend/app/          FastAPI app; science/ (tested modules) and services/ (cache, bundles, analyses)
 ├── src/                  React + TypeScript frontend (features/, api/client.ts, hooks/, state/, utils/)
 ├── tests/
@@ -24,13 +24,8 @@ penumbra_mockup/
 └── README.md (user guide), PENUMBRA.md (features, science, validation), DATA_DOWNLOAD_MANUAL.md, ARCHITECTURE.md, .env.example
 ```
 
-## Outside this folder (read-only inputs, original workstation only)
+## Data
 
-A fresh clone does not need these: `python tasks.py data` downloads the same files from their sources.
-
-
-- `../penumbra_prep/data/raw/`: raw NASA/JPL downloads with checksums (SPICE kernels, PGDA 78 clones and tiles, reference PDFs).
-- `../research/top3_probes/data/`: raw NASA data downloaded during research (LOLA DEMs, PGDA 69 maps, PGDA 78 Site01/04 surfaces, JPL Horizons tables).
-  - Only these **data files** are linked.
-  - The research **probe scripts** (`../research/top3_probes/*.py`) and their outputs are not used by, or copied into, this code base.
-- `../penumbra_prep/env/`: offline Python wheelhouse and npm cache.
+The data is not stored in the repository. `python tasks.py data` downloads it and `python tasks.py imagery` builds the
+globe tiles; see [DATA_DOWNLOAD_MANUAL.md](../DATA_DOWNLOAD_MANUAL.md). On the original development machine,
+`python tasks.py link` hard-links the same files from the first download folders instead.

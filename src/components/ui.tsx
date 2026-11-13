@@ -5,7 +5,7 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { Provenance } from "../types";
 
-/** Definition tooltip on an (i) trigger, or around any child (Instructions §53). */
+/** Definition tooltip on an (i) trigger, or around any child. */
 export function Tip({ title, children, text, side = "top" }: { title?: string; text: ReactNode; children?: ReactNode; side?: "top" | "bottom" | "left" | "right" }) {
   return (
     <Tooltip.Root delayDuration={120}>
@@ -125,7 +125,7 @@ export function Steps({ steps, active }: { steps: string[]; active: number }) {
   );
 }
 
-/** Tween a displayed number towards its target (motion explains change, §29). */
+/** Tween a displayed number towards its target (motion explains change). */
 export function useTween(target: number, ms = 600): number {
   const [v, setV] = useState(target);
   const from = useRef(target);

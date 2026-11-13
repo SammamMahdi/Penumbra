@@ -217,7 +217,7 @@ export function MapView({ simple = false }: { simple?: boolean }) {
     L.current.zone?.setVisible(layers.ellipse);
   }, [layers, unc.enabled, site.id]);
 
-  // ---- robust score field + crossfade nominal → robust (§29)
+  // ---- robust score field + crossfade nominal → robust
   useEffect(() => {
     const res = robust.result;
     if (res) L.current.score.setSource(new Static({ url: gridToCanvas(res.score).toDataURL(), imageExtent: fieldExtent(site.field), projection, interpolate: true }));
@@ -237,7 +237,7 @@ export function MapView({ simple = false }: { simple?: boolean }) {
     return () => cancelAnimationFrame(raf);
   }, [robust.result, heatMetric, site.id, projection]);
 
-  // ---- landing zone: animated ellipse growth (§29)
+  // ---- landing zone: animated ellipse growth
   useEffect(() => {
     const src = (L.current.zone as VectorLayer<VectorSource>)?.getSource();
     if (!src) return;

@@ -1,4 +1,4 @@
-"""Typed request models (Instructions §35). Field names follow the TypeScript contracts in src/types."""
+"""Typed request models. Field names follow the TypeScript contracts in src/types."""
 from __future__ import annotations
 
 from typing import Literal, Optional

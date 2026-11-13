@@ -1,4 +1,4 @@
-"""Data provenance (Instructions §25): the dataset groups with sources, frames, versions and checksums, plus the
+"""Data provenance: the dataset groups with sources, frames, versions and checksums, plus the
 processing state of the cached products."""
 from __future__ import annotations
 

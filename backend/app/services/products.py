@@ -1,4 +1,4 @@
-"""Cached scientific products (Instructions §45): disk .npz under data/cache/, keyed by the inputs, plus an in-memory
+"""Cached scientific products: disk .npz under data/cache/, keyed by the inputs, plus an in-memory
 LRU. No database.
 
   horizons   per site (and terrain realisation, mast): the local performance grid's 720-bin skylines

@@ -1,4 +1,4 @@
-"""Power scenario / energy endurance estimate (Instructions §23; IMPLEMENTATION_PLAN §3.8). Secondary to geometry.
+"""Power scenario / energy endurance estimate. Secondary to geometry.
 
 Vertical panels:  P(t) = sum_panels P_rated * f(t) * max(0, cos(E_sun) cos(A_sun - A_panel))
 Hourly balance:   B(t+1) = clip(B(t) + (P_solar - P_load) * 1 h, 0, B_max)

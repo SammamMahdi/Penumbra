@@ -1,4 +1,4 @@
-"""S1-S2 and frame helpers (IMPLEMENTATION_PLAN §8)."""
+"""S1-S2 and frame helpers."""
 import numpy as np
 import pytest
 

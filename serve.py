@@ -1,4 +1,4 @@
-"""Local server for the Penumbra mock-up: serves dist/ and tiles/, and builds deeper imagery tiles on demand.
+"""Local server for Penumbra: serves dist/ and tiles/, and builds deeper imagery tiles on demand.
 
     python serve.py            -> http://127.0.0.1:4173/
 
@@ -65,7 +65,7 @@ def wms_rect(layer: str, box: tuple[float, float, float, float], w: int, h: int)
     url = f"{WMS}&LAYERS={layer}&BBOX={box[0]},{box[1]},{box[2]},{box[3]}&WIDTH={w}&HEIGHT={h}"
     with UPSTREAM:
         try:
-            with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "penumbra-mockup/1.0"}), timeout=90) as r:
+            with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "penumbra/1.0"}), timeout=90) as r:
                 if not r.headers.get("Content-Type", "").startswith("image/"):
                     return None
                 return np.asarray(Image.open(io.BytesIO(r.read())).convert("L"), dtype=np.float32)
@@ -227,5 +227,5 @@ class Server(ThreadingHTTPServer):
 
 if __name__ == "__main__":
     srv = Server(("127.0.0.1", PORT), Handler)
-    print(f"Penumbra mock-up at http://127.0.0.1:{PORT}/  (close this window to stop)", flush=True)
+    print(f"Penumbra at http://127.0.0.1:{PORT}/  (close this window to stop)", flush=True)
     srv.serve_forever()

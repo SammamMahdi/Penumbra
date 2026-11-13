@@ -68,7 +68,7 @@ def main() -> None:
             groups.append({k: v for k, v in e.items() if k not in ("match", "match_kinds")} | {"files": fl})
     left = [f["path"] for f in files if f["path"] not in used]
     out = {"generated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-           "note": "Raw public NASA/JPL files used by Penumbra (hard links under data/raw). Checksums: SHA-256.",
+           "note": "Raw public NASA/JPL files used by Penumbra (under data/raw; see DATA_DOWNLOAD_MANUAL.md). Checksums: SHA-256.",
            "groups": groups, "unlisted_files": left}
     OUT.write_text(json.dumps(out, indent=1, ensure_ascii=False), encoding="utf-8")
     print(f"{len(groups)} groups, {sum(len(g['files']) for g in groups)} files; unlisted: {len(left)}")

@@ -1,4 +1,4 @@
-"""Independent validation (Instructions §24, §39; IMPLEMENTATION_PLAN §8 "Validation"). Tolerances are fixed here,
+"""Independent validation. Tolerances are fixed here,
 before any result exists; if a case fails, the science is fixed - the tolerance is never widened.
 
 V1  NASA PGDA 69 average-visibility maps (Mazarico et al. 2011; LDEM_75S_120M; "any part of the disc"; surface

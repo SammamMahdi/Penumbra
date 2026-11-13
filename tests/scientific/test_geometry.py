@@ -1,4 +1,4 @@
-"""S3, S7-S10, S12 and the V4 SPICE-vs-Horizons cross-check (IMPLEMENTATION_PLAN §8)."""
+"""S3, S7-S10, S12 and the V4 SPICE-vs-Horizons cross-check."""
 import math
 
 import numpy as np

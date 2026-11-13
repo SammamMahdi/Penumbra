@@ -1,4 +1,4 @@
-"""DSN geometric visibility (Instructions §16; IMPLEMENTATION_PLAN §3.5).
+"""DSN geometric visibility.
 
 DSN geometric opportunity at hour t = Earth visible from the lunar site AND the Moon above the elevation mask at one
 or more of DSS-14 (Goldstone), DSS-63 (Madrid), DSS-43 (Canberra). Station positions: earthstns_itrf93_260814.bsp;

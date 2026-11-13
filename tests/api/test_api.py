@@ -1,4 +1,4 @@
-"""API tests (Instructions §40): valid requests and every documented error path."""
+"""API tests: valid requests and every documented error path."""
 import time
 
 import pytest

@@ -33,7 +33,7 @@ WS = ROOT.parent
 
 def raw_path(rel: str, legacy: str) -> Path:
     """An input file under data/raw/ (fetched by scripts/download_data.py); falls back to the original workspace download
-    folder (legacy, relative to the folder that contains penumbra_mockup) when only that copy exists."""
+    folder (legacy, relative to the folder that contains this repository) when only that copy exists."""
     p = ROOT / "data" / "raw" / rel
     q = WS / legacy
     return q if not p.exists() and q.exists() else p
@@ -116,7 +116,7 @@ def fetch_status(url: str, tries: int = 3, timeout: int = 60) -> tuple[bytes | N
         return None, False
     for k in range(tries):
         try:
-            with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "penumbra-mockup/1.0"}), timeout=timeout) as r:
+            with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "penumbra/1.0"}), timeout=timeout) as r:
                 if not r.headers.get("Content-Type", "").startswith("image/"):
                     return None, True
                 return r.read(), True

@@ -1,5 +1,5 @@
 /** Data and API contracts shared with the FastAPI backend (backend/app). `src/api/client.ts` implements
- *  `PenumbraApi` (Instructions §35). */
+ *  `PenumbraApi`. */
 
 export type Provenance = "verified" | "computed" | "assumption";
 export type SiteId = "cr1" | "shk" | "mal" | "mou" | "nob";

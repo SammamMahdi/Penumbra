@@ -1,13 +1,15 @@
-"""Globe data for the mock-up: Moon albedo + relief textures, Earth texture, and 2027 Sun/Earth geometry.
+"""Globe data for the 3-D globe: Moon albedo + relief textures, Earth texture, and 2027 Sun/Earth geometry.
 
-Inputs (raw public data in penumbra_prep/data/raw/):
+Maintainers only: the output is committed, so a fresh clone does not need to run this.
+
+Inputs (raw public data in ../penumbra_prep/data/raw/ on the development machine):
   lroc/lroc_wac_global_4096x2048.jpg   LROC WAC global mosaic, rendered by the USGS Astrogeology WMS (EPSG:4326, lon -180..180)
   lola_global/ldem_16.img (+ .lbl)      LOLA LDEM_16 v3.1, 16 px/deg simple cylindrical, lon 0..360, int16 x 0.5 m above 1737.4 km
   earth/world.topo.bathy.200412.3x5400x2700.jpg   NASA Blue Marble (Dec 2004)
   spice/*                               NAIF kernels (DE440, lunar orientation, Earth orientation)
 
 Output: src/data/generated/globe.json
-Run with the prepared environment (spiceypy):  ../penumbra_prep/env/.venv/Scripts/python scripts/prepare_globe.py
+Run: python scripts/prepare_globe.py
 """
 from __future__ import annotations
 

@@ -1,8 +1,8 @@
 # Data provenance
 
 Every raw file Penumbra reads, with its source, frame, resolution, version, use and SHA-256 checksum.
-Generated from `data/metadata/datasets.json` (2026-10-01T10:50:31Z). Files are hard links under `data/raw/`
-(`python tasks.py link`). Nothing here is fabricated: values shown in the app are either taken from these files
+Generated from `data/metadata/datasets.json` (2026-10-01T12:20:25Z). Files live under `data/raw/`
+(`python tasks.py data`; see DATA_DOWNLOAD_MANUAL.md). Nothing here is fabricated: values shown in the app are either taken from these files
 (VERIFIED), derived from them by project code (COMPUTED) or explicit user inputs (ASSUMPTION).
 
 ## NASA LRO LOLA gridded DEM LDEM_80S_80M (south polar)
@@ -300,6 +300,19 @@ Generated from `data/metadata/datasets.json` (2026-10-01T10:50:31Z). Files are h
 | `data/raw/horizons/ridge_399_2027-01-01_2028-01-01_60m.txt` | 455,095 | `a7dbbf0ef5db23673d9f7db2beb27500eeec8e8f85489b860a382f1346152dfc` |
 | `data/raw/horizons/shk_10_2027-01-01_2028-01-01_60m.txt` | 454,540 | `6a1fc5685ce559d5488bc5f6aaf8beecb0169bce6290dbec6e674ac405ac0ae4` |
 | `data/raw/horizons/shk_399_2027-01-01_2028-01-01_60m.txt` | 455,095 | `88b59076dc54e6907e505dff79c859bb31607fec5a55cb67f79709fffd9b75a8` |
+
+## Yale Bright Star Catalogue, 5th revised edition (9,110 stars to V = 6.5)
+
+- Source: Hoffleit & Warren (1991), via CDS VizieR catalogue V/50 (columns HR, RA/Dec J2000 deg, Vmag, B-V, Name)
+- Product page: https://vizier.cds.unistra.fr/viz-bin/VizieR?-source=V/50
+- Frame / projection: ICRS/J2000 equatorial; rotated to MOON_ME with SPICE pxform at display time
+- Resolution: star positions to 1e-6 deg
+- Version: fetched 2026-10-01
+- Use: Star field in the 3-D globe, terrain view and sky dome
+
+| File | Bytes | SHA-256 |
+|---|---|---|
+| `data/raw/stars/bsc5_vizier.tsv` | 398,025 | `8c6471bd6a85427e6218ec71af4559cf0e4eb394bf5eeb4eae698d85f4d2db9a` |
 
 ## NASA PGDA Product 78: 5 m south-pole terrain, Site01 and Site04 (surface, slope, error)
 

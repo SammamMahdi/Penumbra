@@ -37,7 +37,7 @@ def test_report() -> None:
     lines += ["## Offline demo", "",
               "Journeys A-C and the responsive checks were run against a server started with `PENUMBRA_OFFLINE=1` (the tile",
               "builders never contact USGS or Moon Trek; only data/ and tiles/ on disk are used). The browser test fails if any",
-              "request leaves 127.0.0.1. Result on 2026-10-01: **PASS** (5 / 5). Imagery for globe areas never visited before",
+              "request leaves 127.0.0.1. Result on 2026-11-13: **PASS** (5 / 5). Imagery for globe areas never visited before",
               "is not available offline; the planner, analyses and validation do not need it.", ""]
     if v:
         lines += ["## Validation (tolerances fixed in advance)", "",
@@ -47,8 +47,7 @@ def test_report() -> None:
                   "- V3 Barker et al. 2021 (clone-based percentiles): not run; the clone grids are optional (`python tasks.py precompute --clones 20`).", ""]
     lines += ["## Known issues", "",
               "- Surface-level (no mast) illumination at knife-edge ridges depends strongly on DEM resolution; see SCIENTIFIC_VALIDATION.md.",
-              "- The robust-aim gain is modest at ±100 m on Connecting Ridge (+1.6 pp in P10); it grows with larger uncertainty and lower percentiles.",
-              "- Bangla interface copy was removed at the team's request.", ""]
+              "- The robust-aim gain is modest at ±100 m on Connecting Ridge (+1.6 pp in P10); it grows with larger uncertainty and lower percentiles.", ""]
     (DOCS / "TEST_REPORT.md").write_text("\n".join(lines), encoding="utf-8")
 
 
@@ -57,7 +56,7 @@ def performance() -> None:
     if not p:
         return
     L = ["# Performance", "", f"Measured with `python scripts/benchmark.py` on {p['machine']} (median of several runs, warm caches",
-         "unless stated). Targets from Instructions §44: interactions near-instant when cached, risk update < 1-2 s, progress",
+         "unless stated). Targets: interactions near-instant when cached, risk update < 1-2 s, progress",
          "shown above 2 s.", "", "## Science kernels", "", "| Operation | Time |", "|---|---|",
          f"| One terrain horizon (720 azimuths x 3,450 samples, 5 m + LOLA to 300 km) | {p['one_horizon_ms']} ms |",
          f"| 256 horizons (parallel over 16 threads) | {p['horizons_256_points_ms']} ms |"]
@@ -102,8 +101,8 @@ def provenance() -> None:
     if not d:
         return
     L = ["# Data provenance", "", "Every raw file Penumbra reads, with its source, frame, resolution, version, use and SHA-256 checksum.",
-         f"Generated from `data/metadata/datasets.json` ({d['generated_utc']}). Files are hard links under `data/raw/`",
-         "(`python tasks.py link`). Nothing here is fabricated: values shown in the app are either taken from these files",
+         f"Generated from `data/metadata/datasets.json` ({d['generated_utc']}). Files live under `data/raw/`",
+         "(`python tasks.py data`; see DATA_DOWNLOAD_MANUAL.md). Nothing here is fabricated: values shown in the app are either taken from these files",
          "(VERIFIED), derived from them by project code (COMPUTED) or explicit user inputs (ASSUMPTION).", ""]
     for g in d["groups"]:
         L += [f"## {g['title']}", "", f"- Source: {g['source']}", f"- Product page: {g.get('product_page', '')}",

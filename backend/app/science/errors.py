@@ -1,4 +1,4 @@
-"""Science errors; the API turns each into {error: {code, message, detail}} (IMPLEMENTATION_PLAN §4)."""
+"""Science errors; the API turns each into {error: {code, message, detail}}."""
 from __future__ import annotations
 
 

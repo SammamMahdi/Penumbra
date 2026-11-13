@@ -1,4 +1,4 @@
-"""Penumbra task runner (Instructions §56-57). Run with the backend's Python environment:
+"""Penumbra task runner. Run with the backend's Python environment:
 
     python tasks.py doctor        check Python, Node, packages, datasets, SPICE kernels, caches, ports
     python tasks.py data          download and verify the raw NASA/JPL files into data/raw (see DATA_DOWNLOAD_MANUAL.md);

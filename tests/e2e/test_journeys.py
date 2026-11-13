@@ -1,4 +1,4 @@
-"""Journeys A-C (Instructions §42) plus the responsive screenshots of §43."""
+"""Journeys A-C plus the responsive screenshots."""
 import re
 
 import pytest

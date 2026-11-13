@@ -1,4 +1,4 @@
-/** Vehicle scenarios for the power estimate (Instructions §23). VERIFIED values cite NASA sources; everything
+/** Vehicle scenarios for the power estimate. VERIFIED values cite NASA sources; everything
  *  else is an explicit, user-editable ASSUMPTION and the UI badges it as such. */
 import type { Vehicle } from "../types";
 

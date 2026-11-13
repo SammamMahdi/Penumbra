@@ -1,4 +1,4 @@
-"""The only place with lunar coordinate formulas (Instructions §10; docs/COORDINATE_SYSTEMS.md).
+"""The only place with lunar coordinate formulas (docs/COORDINATE_SYSTEMS.md).
 
 Frame: MOON_ME (mean Earth / polar axis). The terrain products (LOLA LDEM, PGDA 69, PGDA 78) are in the ME frame of
 DE421; the SPICE kernels used here (moon_pa_de440_200625.bpc + moon_de440_250416.tf) realise MOON_ME as

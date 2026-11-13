@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-10-01T13:27:11Z",
+ "generated_utc": "2026-11-13T11:03:53Z",
  "suites": [
   {
    "name": "Scientific (coordinates, horizons, geometry, uncertainty, power)",
@@ -8,13 +8,13 @@
   },
   {
    "name": "API (endpoints, errors, timeouts)",
-   "passed": 18,
-   "total": 18
+   "passed": 48,
+   "total": 48
   },
   {
    "name": "Frontend (Vitest)",
-   "passed": 13,
-   "total": 13
+   "passed": 68,
+   "total": 68
   },
   {
    "name": "End-to-end journeys A-C (Playwright)",

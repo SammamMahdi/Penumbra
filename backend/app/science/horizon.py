@@ -1,4 +1,4 @@
-"""Terrain horizon (Instructions §11-12; IMPLEMENTATION_PLAN §3.2).
+"""Terrain horizon.
 
 For an observer at map point (x, y), height h0 above the sphere, raised by mast m:
   1. up0 is the radial unit vector; azimuth alpha is measured clockwise from north;

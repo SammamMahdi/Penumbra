@@ -55,7 +55,7 @@ def fetch(url: str, tries: int = 4) -> bytes:
     err: Exception | None = None
     for k in range(tries):
         try:
-            with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "penumbra-mockup/1.0"}), timeout=180) as r:
+            with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "penumbra/1.0"}), timeout=180) as r:
                 if not r.headers.get("Content-Type", "").startswith("image/"):
                     raise ValueError(r.read(200))
                 return r.read()

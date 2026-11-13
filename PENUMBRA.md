@@ -73,7 +73,7 @@ python scripts/benchmark.py    # timings -> docs/performance.json
 python scripts/gen_docs.py     # regenerate TEST_REPORT / PERFORMANCE / VALIDATION_RESULTS / DATA_PROVENANCE
 ```
 
-Last run: 54 / 54 passed. See [docs/TEST_REPORT.md](docs/TEST_REPORT.md).
+Last run: 139 / 139 passed (18 scientific, 48 API, 68 frontend, 5 browser journeys). See [docs/TEST_REPORT.md](docs/TEST_REPORT.md).
 
 ## Offline mode
 

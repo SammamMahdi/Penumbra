@@ -1,6 +1,6 @@
 # Architecture
 
-The goal is the smallest architecture that delivers the product (Instructions §50):
+The goal is the smallest architecture that delivers the product:
 
 - one Python process (FastAPI + Uvicorn);
 - one static frontend;

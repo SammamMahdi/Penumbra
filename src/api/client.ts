@@ -1,5 +1,5 @@
 /** Penumbra API client (FastAPI backend, same origin; Vite proxies /api in development). Implements `PenumbraApi`.
- *  Every number the UI shows comes from these calls; there is no client-side fallback science (Instructions §37). */
+ *  Every number the UI shows comes from these calls; there is no client-side fallback science. */
 import type {
   CompareResult,
   LandingRiskRequest,

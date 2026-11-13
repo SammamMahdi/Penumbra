@@ -1,4 +1,4 @@
-"""Browser journeys (Instructions §42) against a running server: python tasks.py dev (or set PENUMBRA_URL)."""
+"""Browser journeys against a running server: python tasks.py dev (or set PENUMBRA_URL)."""
 import os
 from pathlib import Path
 from urllib.parse import urlparse

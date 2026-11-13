@@ -2,8 +2,8 @@
 
     uvicorn backend.app.main:app --port 4173       (or: python tasks.py dev)
 
-Serves /api/* (Instructions §35), the built frontend (dist/) and the Moon imagery tiles (tiles/, built on demand by
-serve.py's tile builders and cached). Everything the judged flow needs is local (§36).
+Serves /api/*, the built frontend (dist/) and the Moon imagery tiles (tiles/, built on demand by
+serve.py's tile builders and cached). Everything the judged flow needs is local.
 """
 from __future__ import annotations
 

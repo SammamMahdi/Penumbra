@@ -1,4 +1,4 @@
-"""Measure the timings reported in docs/PERFORMANCE.md (Instructions §12, §44). Needs the server for the HTTP and
+"""Measure the timings reported in docs/PERFORMANCE.md. Needs the server for the HTTP and
 browser timings (python tasks.py dev).
 
     python scripts/benchmark.py

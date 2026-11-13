@@ -1,6 +1,6 @@
 {
  "generated_utc": "2026-10-01T12:20:25Z",
- "note": "Raw public NASA/JPL files used by Penumbra (hard links under data/raw). Checksums: SHA-256.",
+ "note": "Raw public NASA/JPL files used by Penumbra (under data/raw; see DATA_DOWNLOAD_MANUAL.md). Checksums: SHA-256.",
  "groups": [
   {
    "id": "lola_ldem_80m",

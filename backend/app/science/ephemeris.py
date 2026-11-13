@@ -1,4 +1,4 @@
-"""Sun, Earth and DSN geometry from local SPICE kernels (Instructions §13; IMPLEMENTATION_PLAN §3.3, §3.5).
+"""Sun, Earth and DSN geometry from local SPICE kernels.
 
 Kernel set and load order (docs/COORDINATE_SYSTEMS.md):
   naif0012.tls, pck00011.tpc, gm_de440.tpc, de440s.bsp,

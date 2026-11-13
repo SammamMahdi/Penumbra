@@ -245,7 +245,7 @@ function Scene({ site, grids, sunDir, sunEl, earthDir, earthPhase, earthRot, stu
     slopeTexture(site.terrain.slope_png, site.terrain.slope_max_deg).then(setSlopeTex);
   }, [site]);
 
-  // crossfade nominal → robust (§29)
+  // crossfade nominal → robust
   const nomMat = useRef<THREE.MeshStandardMaterial>(null);
   const robMat = useRef<THREE.MeshStandardMaterial>(null);
   const mix = useRef(0);

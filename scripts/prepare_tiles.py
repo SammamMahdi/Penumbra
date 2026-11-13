@@ -1,4 +1,4 @@
-"""Tile pyramids for the zoomable Moon globe (served by serve.py from penumbra_mockup/tiles/).
+"""Tile pyramids for the zoomable Moon globe (served by serve.py from tiles/).
 
   tiles/wac/{L}/{x}/{y}.jpg   LROC WAC global mosaic (USGS Astrogeology WMS), geographic quadtree,
                               level L = 2^(L+1) x 2^L tiles of 256 px, y = 0 at the north edge.
@@ -43,7 +43,7 @@ N = 65
 def fetch(url: str, tries: int = 4) -> bytes:
     for k in range(tries):
         try:
-            with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "penumbra-mockup/1.0"}), timeout=120) as r:
+            with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "penumbra/1.0"}), timeout=120) as r:
                 data = r.read()
                 if r.headers.get("Content-Type", "").startswith("image/"):
                     return data

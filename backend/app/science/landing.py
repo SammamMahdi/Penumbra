@@ -1,5 +1,4 @@
-"""Landing uncertainty, landing-zone statistics and the robust-aim optimiser (Instructions §17-19;
-IMPLEMENTATION_PLAN §3.7).
+"""Landing uncertainty, landing-zone statistics and the robust-aim optimiser.
 
 Touchdown models (offsets from the commanded aim, local east/north metres):
   circular            uniform over a disc of radius r
@@ -7,7 +6,7 @@ Touchdown models (offsets from the commanded aim, local east/north metres):
                       for probability p is k = sqrt(-2 ln(1 - p))
 Samples: N offsets drawn once from a fixed seed and reused for every candidate aim (common random numbers, so
 rankings are stable). Metrics at aim + offset come from bilinear interpolation of the local performance grid; the
-terrain horizon is never recomputed per sample (§17).
+terrain horizon is never recomputed per sample.
 Robustness: Pq = q-th percentile of the utility over samples (P50 typical, P20 cautious, P10 conservative, P05 highly
 conservative). Robust aim = argmax over candidate aims of Pq.
 """

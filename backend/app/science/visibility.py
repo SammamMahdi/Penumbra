@@ -1,4 +1,4 @@
-"""Terrain-aware Sun and Earth visibility (Instructions §14-15; IMPLEMENTATION_PLAN §3.4, §3.6).
+"""Terrain-aware Sun and Earth visibility.
 
 With e = E_target - H(A_target) (target elevation above the skyline at its azimuth) and rho its angular radius:
   solar-disc fraction (straight skyline across the disc):

@@ -1,7 +1,7 @@
 # Performance
 
 Measured with `python scripts/benchmark.py` on AMD64 Family 25 Model 97 Stepping 2, AuthenticAMD, 16 logical CPUs, Windows 11 (median of several runs, warm caches
-unless stated). Targets from Instructions §44: interactions near-instant when cached, risk update < 1-2 s, progress
+unless stated). Targets: interactions near-instant when cached, risk update < 1-2 s, progress
 shown above 2 s.
 
 ## Science kernels
