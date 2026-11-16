@@ -96,10 +96,13 @@ def main() -> None:
 
     api.create_repo(space_repo, repo_type="space", space_sdk="docker", exist_ok=True)
     api.add_space_secret(space_repo, "DATA_TOKEN", token)
-    docker = (HERE / "Dockerfile").read_text(encoding="utf-8").replace("__DATA_REPO__", data_repo)
+    def lf(name: str) -> str:  # Unix line endings, whatever the working copy uses
+        return (HERE / name).read_text(encoding="utf-8").replace("\r\n", "\n")
+
+    docker = lf("Dockerfile").replace("__DATA_REPO__", data_repo)
     ops = [CommitOperationAdd("Dockerfile", docker.encode()),
-           CommitOperationAdd("README.md", str(HERE / "README.md")),
-           CommitOperationAdd("fetch_data.py", str(HERE / "fetch_data.py"))]
+           CommitOperationAdd("README.md", lf("README.md").encode()),
+           CommitOperationAdd("fetch_data.py", lf("fetch_data.py").encode())]
     api.create_commit(space_repo, ops, repo_type="space", commit_message="Deploy Penumbra")
     print(f"space: https://huggingface.co/spaces/{space_repo}  (app: https://{user.lower()}-{a.space}.hf.space)", flush=True)
 
